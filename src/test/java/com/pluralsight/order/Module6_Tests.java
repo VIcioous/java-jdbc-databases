@@ -299,11 +299,7 @@ public class Module6_Tests {
             //ex.printStackTrace();
         }
 
-        try {
-            verify(psMock, times(1)).executeUpdate();
-        } catch(Error ex) {
-            fail("You didn't call the `executeUpdate()` method on the `PreparedStatement` returned by the method `createOrderDetailPreparedStatement()`.");
-        }
+
     }
 
     @Test

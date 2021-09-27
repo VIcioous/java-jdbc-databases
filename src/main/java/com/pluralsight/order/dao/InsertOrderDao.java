@@ -23,6 +23,7 @@ public class InsertOrderDao {
 
     /**
      * Constructor
+     *
      * @param database Database object
      */
     public InsertOrderDao(Database database) {
@@ -31,6 +32,7 @@ public class InsertOrderDao {
 
     /**
      * Inserts an order
+     *
      * @param orderDto Object with the information to insert
      * @return The ID of the order inserted
      */
@@ -45,12 +47,12 @@ public class InsertOrderDao {
 
 
             try (ResultSet result = ps.getGeneratedKeys()) {
-                if(result != null) {
-                    if(!result.next()){
+                if (result != null) {
+                    if (!result.next()) {
                         con.rollback();
 
                     } else {
-                        orderId=result.getLong(1);
+                        orderId = result.getLong(1);
 
                         for (OrderDetailDto orderDetailDto : orderDto.getOrderDetail()) {
                             orderDetailDto.setOrderId(orderId);
@@ -58,9 +60,9 @@ public class InsertOrderDao {
                             try (PreparedStatement detailsPS =
                                          createOrderDetailPreparedStatement(con, orderDetailDto)) {
                                 int count = detailsPS.executeUpdate();
-                                if(count!= 1){
+                                if (count != 1) {
                                     con.rollback();
-                                    orderId= -1;
+                                    orderId = -1;
                                 }
 
                             }
@@ -68,7 +70,7 @@ public class InsertOrderDao {
                         con.commit();
                     }
                 }
-            } catch(SQLException ex) {
+            } catch (SQLException ex) {
                 con.rollback();
                 ExceptionHandler.handleException(ex);
             }
@@ -81,14 +83,15 @@ public class InsertOrderDao {
 
     /**
      * Creates a PreparedStatement object to insert the order record
-     * @param con Connnection object
+     *
+     * @param con      Connnection object
      * @param orderDto Object with the parameters to set on the PreparedStatement
      * @return A PreparedStatement object
      * @throws SQLException In case of an error
      */
     private PreparedStatement createOrderPreparedStatement(Connection con, OrderDto orderDto) throws SQLException {
-        PreparedStatement preparedStatement = con.prepareStatement(sqlOrder,Statement.RETURN_GENERATED_KEYS);
-        preparedStatement.setLong(1,orderDto.getCustomerId());
+        PreparedStatement preparedStatement = con.prepareStatement(sqlOrder, Statement.RETURN_GENERATED_KEYS);
+        preparedStatement.setLong(1, orderDto.getCustomerId());
         preparedStatement.setTimestamp(2, (Timestamp) orderDto.getDate());
         preparedStatement.setString(3, String.valueOf(OrderStatus.CREATED));
         return preparedStatement;
@@ -96,16 +99,17 @@ public class InsertOrderDao {
 
     /**
      * Creates a PreparedStatement object to insert the details of the order
-     * @param con Connnection object
+     *
+     * @param con            Connnection object
      * @param orderDetailDto Object with the parameters to set on the PreparedStatement
      * @return A PreparedStatement object
      * @throws SQLException In case of an error
      */
     private PreparedStatement createOrderDetailPreparedStatement(Connection con, OrderDetailDto orderDetailDto) throws SQLException {
         PreparedStatement preparedStatement = con.prepareStatement(sqlOrderDetail);
-        preparedStatement.setLong(1,orderDetailDto.getOrderId());
+        preparedStatement.setLong(1, orderDetailDto.getOrderId());
         preparedStatement.setLong(2, orderDetailDto.getProductId());
-        preparedStatement.setInt(3,orderDetailDto.getQuantity());
+        preparedStatement.setInt(3, orderDetailDto.getQuantity());
         return preparedStatement;
     }
 }
