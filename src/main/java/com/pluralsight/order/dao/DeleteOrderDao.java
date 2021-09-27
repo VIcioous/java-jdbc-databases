@@ -31,7 +31,7 @@ public class DeleteOrderDao {
     public int deleteOrdersById(ParamsDto paramsDto) {
         int numberResults = 0;
 
-        try (Connection con = null;
+        try (Connection con = database.getConnection();
              PreparedStatement ps = createPreparedStatement(con, paramsDto.getOrderIds())
         ) {
 
@@ -62,7 +62,7 @@ public class DeleteOrderDao {
      */
     private PreparedStatement createPreparedStatement(Connection con, List<Long> orderIds) throws SQLException {
         String sql = buildDeleteSql(orderIds);
-        PreparedStatement ps = null;
+        PreparedStatement ps = con.prepareStatement(sql);
 
         return ps;
     }
