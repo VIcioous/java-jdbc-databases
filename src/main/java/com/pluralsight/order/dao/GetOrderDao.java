@@ -38,11 +38,12 @@ public class GetOrderDao {
              ResultSet rs = createResultSet(ps);
 
         ) {
-
-            orderDto.setOrderId(rs.getLong("order_id"));
-            orderDto.setCustomerId(rs.getLong("order_customer_id"));
-            orderDto.setDate(rs.getDate("order_date"));
-            orderDto.setStatus(rs.getString("order_status"));
+            if (rs.next()) {
+                orderDto.setOrderId(rs.getLong("order_id"));
+                orderDto.setCustomerId(rs.getLong("order_customer_id"));
+                orderDto.setDate(rs.getDate("order_date"));
+                orderDto.setStatus(rs.getString("order_status"));
+            }
         } catch (SQLException ex) {
             ExceptionHandler.handleException(ex);
         }
@@ -71,7 +72,7 @@ public class GetOrderDao {
      */
     private ResultSet createResultSet(PreparedStatement ps) throws SQLException {
 
-        ResultSet resultSet;
-        return resultSet = ps.getResultSet();
+
+        return  ps.executeQuery(query);
     }
 }
