@@ -41,7 +41,7 @@ public class InsertOrderDao {
              PreparedStatement ps = createOrderPreparedStatement(con, orderDto)
         ) {
             con.setAutoCommit(false);
-
+            ps.executeUpdate();
 
 
             try (ResultSet result = ps.getGeneratedKeys()) {
