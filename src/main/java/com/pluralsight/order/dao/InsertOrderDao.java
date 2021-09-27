@@ -50,7 +50,7 @@ public class InsertOrderDao {
                         con.rollback();
 
                     } else {
-                        orderId=result.getLong("order_id");
+                        orderId=result.getLong(1);
 
                         for (OrderDetailDto orderDetailDto : orderDto.getOrderDetail()) {
                             orderDetailDto.setOrderId(orderId);
